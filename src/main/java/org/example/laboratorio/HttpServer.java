@@ -1,4 +1,4 @@
-package org.example;
+package org.example.laboratorio;
 
 import java.net.*;
 import java.io.*;
@@ -64,16 +64,27 @@ public class HttpServer {
         serverSocket.close();
     }
 
-    public static String searchMovie(String movietitle) {
-        String apiUrl = "http://www.omdbapi.com/?apikey=884ff19d&t=" + movietitle;
-        String response = "HTTP/1.1 200 OK\r\n"
-                + "Content-Type: text/json \r\n"
-                + "\r\n"
-                + "Movie Search Results: " + movietitle;
-        return response;
+    public static String searchMovie(String movietitle) throws IOException {
+        String apiUrl = HttpConnectionExample.getAPI(movietitle);
+        if(Cache.OnCache(apiUrl)) {
+            int index = Cache.getCacheList().indexOf(apiUrl);
+            return "HTTP/1.1 200 OK\r\n"
+                    + "Content-Type: application/json\r\n"
+                    + "\r\n"
+                    + formatText(Cache.cacheList.get(index));
+        }else{
+            Cache.addMovieToCache(apiUrl);
+            return "HTTP/1.1 200 OK\r\n"
+                    + "Content-Type: application/json\r\n"
+                    + "\r\n"
+                    + formatText(apiUrl);
+        }
     }
 
-
+    public static String formatText(String apiUrl){
+        String text = apiUrl.replaceAll("[{}\"]", "").replaceAll(",", "\r\n").replaceAll(":", ": ");
+        return text;
+    }
 
     public static String getIndexResponse() {
         String response = "HTTP/1.1 200 OK\r\n"
@@ -88,9 +99,9 @@ public class HttpServer {
                 + "    </head>\n"
                 + "    <body>\n"
                 + "        <h1>Search by title</h1>\n"
-                + "        <form action=\"/hello\">\n"
-                + "            <label for=\"name\">Title:</label><br>\n"
-                + "            <input type=\"text\" id=\"name\" name=\"name\" value=\"Guardians of the galaxy\"><br><br>\n"
+                + "        <form action=\"/searchmovie\">\n"
+                + "            <label for=\"title\">Title:</label><br>\n"
+                + "            <input type=\"text\" id=\"title\" name=\"title\" value=\"Guardians of the galaxy\"><br><br>\n"
                 + "            <input type=\"button\" value=\"Search\" onclick=\"loadGetMsg()\">\n"
                 + "        </form> \n"
                 + "        <div id=\"getrespmsg\"></div>\n"
