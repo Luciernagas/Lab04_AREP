@@ -32,9 +32,10 @@ Al realizar los pasos anteriores se espera visualizar lo siguiente en la página
 * Maven - Gestión de dependencias
 
 * * *
+### Autores
+♡ Luisa Valentina De la hoz Rocha ♡
+
+* * *
 ### Licencia
 Este proyecto esta autorizado bajo la licencia que se puede encontar en el archivo LICENSE.txt, en el se pueden encontrar los detalles
 
-* * *
-### Autores
-♡ Luisa Valentina De la hoz Rocha ♡
