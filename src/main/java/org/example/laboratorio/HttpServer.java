@@ -64,6 +64,15 @@ public class HttpServer {
         serverSocket.close();
     }
 
+    /**
+     * Método que realiza una búsqueda de información sobre una película utilizando el título proporcionado
+     * Consulta la API de películas para obtener los datos de la película.
+     * Consulta en memoria si la busqueda la fue realizada y se encuentra en cache
+     * Le da un formato a los datos recibidos
+     * @param movietitle titulo de la pelicula que se esta consultado
+     * @return los detalles de la película
+     * @throws IOException si ocurre un error durante la conexión a la API de películas
+     */
     public static String searchMovie(String movietitle) throws IOException {
         String apiUrl = HttpConnectionExample.getAPI(movietitle);
         if(Cache.OnCache(apiUrl)) {
@@ -81,6 +90,11 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Formatea una cadena de texto que contiene información de la pelicula dada por la API, eliminando ciertos caracteres y ajustando el formato
+     * @param apiUrl String que contiene la información de la pelicula dado por la API
+     * @return Datos formateados
+     */
     public static String formatText(String apiUrl){
         String text = apiUrl.replaceAll("[{}\"]", "").replaceAll(",", "\r\n").replaceAll(":", ": ");
         return text;
