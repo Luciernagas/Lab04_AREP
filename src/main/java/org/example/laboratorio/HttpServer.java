@@ -66,7 +66,7 @@ public class HttpServer {
                 }
             }
             if (servicios.containsKey(uri)) {
-                //uri = HttpServer.buscar(uri).toString();
+                uri = HttpServer.buscar(uri).toString();
                 createResponse(request, uri, out, output);
             }
 
@@ -81,10 +81,13 @@ public class HttpServer {
         servicios.put(url, endpoint);
     }
 
-    public static MethodGetAndPost buscar(String url) {
-        return servicios.get(url);
+    public static String buscar(String url) {
+        MethodGetAndPost endpoint = servicios.get(url);
+        if (endpoint != null) {
+            return endpoint.handle(null, null); // Llama al método para obtener la ruta
+        }
+        return null; // Manejar el caso en el que el URL no se encuentra registrado
     }
-
 
     private static void createResponse(String request, String uri, PrintWriter out, OutputStream output) throws IOException {
         System.out.println("request to interpret: " + request);
@@ -99,8 +102,8 @@ public class HttpServer {
 
         if (path.endsWith(".html") || path.endsWith(".js") || path.endsWith(".css") ) {
             String extension = path.substring(path.lastIndexOf('.') + 1);
-            Path file = Paths.get("./src/main/resources/www" + uri);
-            //Path file = Paths(uri);
+            //Path file = Paths.get("./src/main/resources/www" + uri);
+            Path file = Paths.get(uri);
 
             String defaultHeader = "HTTP/1.1 200 OK\r\n"
                     + "Content-Type: text/" + extension + "\r\n"
@@ -120,8 +123,9 @@ public class HttpServer {
 
         } else if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".gif") ){
             String extension = path.substring(path.lastIndexOf('.') + 1);
-            Path file = Paths.get("./src/main/resources/images" + uri);
-
+            //Path file = Paths.get("./src/main/resources/images" + uri);
+            Path file = Paths.get(uri);
+            
             try{
                 FileInputStream fileInputStream = new FileInputStream(file.toFile());
                 byte[] longFile = new byte[(int) file.toFile().length()];
