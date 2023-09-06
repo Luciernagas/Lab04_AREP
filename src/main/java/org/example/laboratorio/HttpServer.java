@@ -6,11 +6,28 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.System.out;
 
 public class HttpServer {
+    static Map<String, MethodGetAndPost> servicios = new HashMap<String, MethodGetAndPost>();
+
     public static void main(String[] args) throws IOException {
+        HttpServer.registrar("/index.html", (request, response) -> {
+            return "./src/main/resources/www/index.html"; });
+        HttpServer.registrar("/page2.html", (request, response) -> {
+            return "./src/main/resources/www/page2.html";});
+        HttpServer.registrar("/page3.html", (request, response) -> {
+            return "./src/main/resources/www/page3.html";});
+        HttpServer.registrar("/cielo.png", (request, response) -> {
+            return "./src/main/resources/images/cielo.png";});
+        HttpServer.registrar("/conejo.jpg", (request, response) -> {
+            return "./src/main/resources/images/conejo.jpg";});
+        HttpServer.registrar("/sanrio.gif", (request, response) -> {
+            return "./src/main/resources/images/sanrio.gif";});
+
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(35000);
@@ -36,17 +53,22 @@ public class HttpServer {
             String inputLine;
             boolean firstReqLine = true;
             String request = "";
+            String uri = null;
             while ((inputLine = in.readLine()) != null) {
                 System.out.println("Received: " + inputLine);
                 if (firstReqLine) {
                     firstReqLine = false;
                     request = inputLine;
+                    uri = inputLine.split(" ")[1];
                 }
                 if (!in.ready()) {
                     break;
                 }
             }
-            createResponse(request, out, output);
+            if (servicios.containsKey(uri)) {
+                //uri = HttpServer.buscar(uri).toString();
+                createResponse(request, uri, out, output);
+            }
 
             out.close();
             in.close();
@@ -55,7 +77,16 @@ public class HttpServer {
         serverSocket.close();
     }
 
-    private static void createResponse(String request, PrintWriter out, OutputStream output) throws IOException {
+    public static void registrar(String url, MethodGetAndPost endpoint) {
+        servicios.put(url, endpoint);
+    }
+
+    public static MethodGetAndPost buscar(String url) {
+        return servicios.get(url);
+    }
+
+
+    private static void createResponse(String request, String uri, PrintWriter out, OutputStream output) throws IOException {
         System.out.println("request to interpret: " + request);
         if (request.equals("")) {
             return;
@@ -68,7 +99,8 @@ public class HttpServer {
 
         if (path.endsWith(".html") || path.endsWith(".js") || path.endsWith(".css") ) {
             String extension = path.substring(path.lastIndexOf('.') + 1);
-            Path file = Paths.get("./src/main/resources/www" + path);
+            Path file = Paths.get("./src/main/resources/www" + uri);
+            //Path file = Paths(uri);
 
             String defaultHeader = "HTTP/1.1 200 OK\r\n"
                     + "Content-Type: text/" + extension + "\r\n"
@@ -88,7 +120,7 @@ public class HttpServer {
 
         } else if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".gif") ){
             String extension = path.substring(path.lastIndexOf('.') + 1);
-            Path file = Paths.get("./src/main/resources/images" + path);
+            Path file = Paths.get("./src/main/resources/images" + uri);
 
             try{
                 FileInputStream fileInputStream = new FileInputStream(file.toFile());
