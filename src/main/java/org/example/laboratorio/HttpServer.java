@@ -66,7 +66,7 @@ public class HttpServer {
                 }
             }
             if (servicios.containsKey(uri)) {
-                uri = HttpServer.buscar(uri).toString();
+                uri = HttpServer.buscar(uri);
                 createResponse(request, uri, out, output);
             }
 
@@ -125,7 +125,7 @@ public class HttpServer {
             String extension = path.substring(path.lastIndexOf('.') + 1);
             //Path file = Paths.get("./src/main/resources/images" + uri);
             Path file = Paths.get(uri);
-            
+
             try{
                 FileInputStream fileInputStream = new FileInputStream(file.toFile());
                 byte[] longFile = new byte[(int) file.toFile().length()];
