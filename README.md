@@ -40,7 +40,8 @@ Para la ejecución de pruebas se debe ingresar el siguiente comando en la termin
 mvn test
 ~~~
 Se espera que el resultado sea el siguiente:
-![image](https://github.com/Luciernagas/Lab04_AREP/assets/104604359/f5d42f6c-1b4e-4a95-88e7-29b4fa488a6c)
+![image](https://github.com/Luciernagas/Lab04_AREP/assets/104604359/d86565b4-d8bd-4811-a042-651bdc9a51f8)
+
 
 
 Tambien se confirmará el correcto funcionamiento del servidor web:
