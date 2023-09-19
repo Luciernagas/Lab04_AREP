@@ -49,15 +49,6 @@ Tambien se confirmará el correcto funcionamiento del servidor web:
 
 ![image](https://github.com/Luciernagas/Lab04_AREP/assets/104604359/df7f7bea-96b2-46ee-a0a6-8372c8ebfeab)
 
-
-
-* * *
-### Arquitectura del prototipo
-En este servidor, se registran diferentes rutas (URLs) junto con los controladores que manejan las solicitudes HTTP para esas rutas específicas. Luego, el servidor escucha en un puerto determinado (en este caso, el puerto 35000) y maneja las solicitudes entrantes para las rutas registradas, en mi concepto su arquitectura está dada por:
-* Registro de Rutas. (Spark)
-* Configuración del Servidor.
-* Manejo de Solicitudes.
-* Creación de Respuesta.
   
 * * *
 ### Construido con
